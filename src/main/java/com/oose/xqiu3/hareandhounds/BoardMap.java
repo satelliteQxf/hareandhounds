@@ -54,9 +54,9 @@ public class BoardMap {
         boardEdge.add(new Edge(v6,v8));
         boardEdge.add(new Edge(v6,v9));
         boardEdge.add(new Edge(v6,v10));
-        boardEdge.add(new Edge(v7,v8));
+        boardEdge.add(new Edge(v7,v10));
         boardEdge.add(new Edge(v8,v9));
-        boardEdge.add(new Edge(v8,v10));
+        boardEdge.add(new Edge(v8,v11));
         boardEdge.add(new Edge(v9,v10));
         boardEdge.add(new Edge(v9,v11));
         boardEdge.add(new Edge(v10,v11));
