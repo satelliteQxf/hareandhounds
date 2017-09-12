@@ -35,8 +35,18 @@ public class GameService {
      * @return startGamePOJO
      */
     public StartGamePOJO startGame(String body) throws MissArgumentException{
+        //first determine if it's a enpty request
+        if(body.equals("")){
+            throw new MissArgumentException("missing argument or wrong argument!",null);
+        }
         //generate a new game_id
-        StartGameRequest request = new Gson().fromJson(body,StartGameRequest.class);
+        StartGameRequest request = null;
+        try{
+            request = new Gson().fromJson(body,StartGameRequest.class);
+        }catch (Exception ex){
+            throw new MissArgumentException("missing argument or wrong argument!",null);
+        }
+
         String pieceType = request.getPieceType();
         StartGamePOJO sgPOJO = new StartGamePOJO();
         int game_id = autoIncrementNumber++;
@@ -72,7 +82,12 @@ public class GameService {
      * @return StatePOJO
      */
     public StatePOJO describeState(String gameId) throws InvalidGameException {
-        int game_id = Integer.valueOf(gameId);
+        int game_id = 0;
+        try {
+            game_id = Integer.valueOf(gameId);
+        }catch(Exception ex){
+            throw new InvalidGameException("this is an invalid game id",null);
+        }
         StatePOJO stPOJO = new StatePOJO();
         if (!gameInfo.containsKey(game_id)) {
             throw new InvalidGameException("this is an invalid game id", null);
@@ -98,7 +113,12 @@ public class GameService {
     }
 
     public List<SinglePiece> describeBoard(String gameId) throws InvalidGameException{
-        int game_id = Integer.valueOf(gameId);
+        int game_id = 0;
+        try {
+            game_id = Integer.valueOf(gameId);
+        }catch(Exception ex){
+            throw new InvalidGameException("this is an invalid game id",null);
+        }
         List<SinglePiece> returnList = new ArrayList<SinglePiece>();
         if (!gameInfo.containsKey(game_id)) {
             throw new InvalidGameException("this is an invalid game id", null);
@@ -126,7 +146,12 @@ public class GameService {
     }
 
     public StartGamePOJO joinGame(String gameId) throws InvalidGameException,PlayerAlreadyJoinedException{
-        int game_id = Integer.valueOf(gameId);
+        int game_id = 0;
+        try {
+            game_id = Integer.valueOf(gameId);
+        }catch(Exception ex){
+            throw new InvalidGameException("this is an invalid game id",null);
+        }
         if (!gameInfo.containsKey(game_id)) {
             throw new InvalidGameException("this is an invalid game id", null);
         }
@@ -155,8 +180,25 @@ public class GameService {
     public void movePiece(String gameId,String body)throws InvalidGameException,
             BoardOperation.GameIllegalMoveException,IncorrectTurnException,InvalidPlayerException{
         MovePieceRequest request = new Gson().fromJson(body,MovePieceRequest.class);
-        int playerRequest = Integer.valueOf(request.playerId);
-        int game_id = Integer.valueOf(gameId);
+        //first check if this game already finishes
+        StatePOJO currPOJO = describeState(gameId);
+        String currState = currPOJO.getState();
+        if(currState.equals("WIN_HARE_BY_ESCAPE") ||
+                currState.equals("WIN_HARE_BY_STALLING") || currState.equals("WIN_HOUND")){
+            throw new IncorrectTurnException("the game ends!",null);
+        }
+        int playerRequest = 0;
+        try{
+            playerRequest = Integer.valueOf(request.playerId);
+        }catch (Exception ex){
+            throw new InvalidPlayerException("this is an invalid player id!",null);
+        }
+        int game_id = 0;
+        try {
+            game_id = Integer.valueOf(gameId);
+        }catch(Exception ex){
+            throw new InvalidGameException("this is an invalid game id",null);
+        }
         if(!gameInfo.containsKey(game_id)){
             throw new InvalidGameException("Invalid Game",null);
         }
