@@ -58,9 +58,12 @@ public class BoardOperation{
 
     public Boolean isHoundWin(Board board){
         //If hound wins, it can only trap the hare
-        //there are only one way to trap the hare
+        //there are only three way to trap the hare
         int[][] boardArray = board.getBoard();
-        return (boardArray[3][0] == 1 && boardArray[3][1] == 1 && boardArray[3][2] == 1 && boardArray[4][1] == 2);
+        Boolean isTrappedIn41 = boardArray[3][0] == 1 && boardArray[3][1] == 1 && boardArray[3][2] == 1 && boardArray[4][1] == 2;
+        Boolean isTrappedIn20 = boardArray[1][0] == 1 && boardArray[2][1] == 1 && boardArray[3][0] == 1 && boardArray[2][0] == 2;
+        Boolean isTrappedIn22 = boardArray[1][2] == 1 && boardArray[2][1] == 1 && boardArray[3][2] == 1 && boardArray[2][2] == 2;
+        return isTrappedIn41 || isTrappedIn20 || isTrappedIn22;
     }
 
     public Boolean isHareWinByEscape(Board board){
